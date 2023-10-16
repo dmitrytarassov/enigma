@@ -9,6 +9,8 @@
 #include <string>
 #include <algorithm>
 
+#include "Log.h"
+
 class Rotor {
 private:
     std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -34,15 +36,6 @@ public:
         } else if (type == "V") {
             //            ABCDEFGHIJKLMNOPQRSTUVWXYZ
             return Rotor("VZBRGITYUPSDNHLXAWMJQOFECK", position, type);
-        } else if (type == "test-1") {
-            //            ABCDEFGHIJKLMNOPQRSTUVWXYZ
-            return Rotor("ABCDEFGHIJKLMNOPQRSTUVWXYZ", position, type);
-        } else if (type == "test-2") {
-            //            ABCDEFGHIJKLMNOPQRSTUVWXYZ
-            return Rotor("UVWXYZKLMNOPQRSTABCDEFGHIJ", position, type);
-        } else if (type == "test-3") {
-            //            ABCDEFGHIJKLMNOPQRSTUVWXYZ
-            return Rotor("HGFEDCBAYXWVUZIJTSRQPONMLK", position, type);
         }
 
         throw std::invalid_argument("Unknown rotor type");
@@ -69,21 +62,19 @@ public:
     }
 
     void rotate() {
-        position = (position + 1) % configuration.length();
-        std::rotate(configuration.begin(), configuration.begin() + 1, configuration.end());
+        position = (position + 1) % alphabet.length();
+        std::rotate(alphabet.begin(), alphabet.begin() + 1, alphabet.end());
     }
 
     char transform(char input) {
         int index = alphabet.find(input);
-//        std::cout << alphabet << std::endl;
-//        std::cout << configuration << std::endl;
-//        std::cout << "Rotor " << type << ": " << input << " -> " << configuration[index] << std::endl;
+        Log::log("Rotor", type, input, configuration[index], true);
         return configuration[index];
     }
 
     char reverseTransform(char input) {
         int index = configuration.find(input);
-//        std::cout << "Rotor back: " << input << " -> " << alphabet[index] << std::endl;
+        Log::log("Rotor back", type, input, alphabet[index], false);
         return alphabet[index];
     }
 

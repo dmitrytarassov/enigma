@@ -11,4 +11,7 @@ add_executable(cpp main.cpp
         Reflector.cpp
         Reflector.h
         Commutator.cpp
-        Commutator.h)
+        Commutator.h
+        Log.cpp
+        Log.h
+)

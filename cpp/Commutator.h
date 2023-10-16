@@ -6,26 +6,38 @@
 #define CPP_COMMUTATOR_H
 
 #include "iostream"
+#include "Log.h"
 
 class Commutator {
 private:
     std::vector<std::string> pairs = {};
+
+    std::string join(const std::vector<std::string>& vec) {
+        std::string result;
+        for (const auto& word : vec) {
+            if (!result.empty()) {
+                result += " ";
+            }
+            result += word;
+        }
+        return result;
+    }
+
 public:
     Commutator(std::vector<std::string> pairs): pairs(pairs) {}
 
-    char transform(char letter) {
+    char transform(char input) {
+        char output = input;
         for (std::string config: pairs) {
-            if (config[0] == letter) {
-//                std::cout << "Commutator " << letter << " -> " << config[1] << std::endl;
-                return config[1];
-            } else if (config[1] == letter) {
-//                std::cout << "Commutator " << letter << " -> " << config[0] << std::endl;
-                return config[0];
+            if (config[0] == input) {
+                output = config[1];
+            } else if (config[1] == input) {
+                output = config[0];
             }
         }
 
-//        std::cout << "Commutator " << letter << " = " << letter << std::endl;
-        return letter;
+        Log::log("Commutator", join(pairs), input, output, true);
+        return output;
     }
 };
 

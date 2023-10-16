@@ -13,7 +13,7 @@ int main() {
             Rotor::factory("I", 13),
             Rotor::factory("II", 24)
         },
-        Reflector("EJMZALYXVBWFCRQUONTSPIKHGD"),
+        Reflector::factory("UKW-A"),
         Commutator({
            "AM", "FI", "NV", "PS", "TU", "WZ"
         })
