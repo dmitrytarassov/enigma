@@ -7,10 +7,12 @@
 
 #include "iostream"
 #include "Log.h"
+#include "Ring.h"
 
 class Commutator {
 private:
-    std::vector<std::string> pairs = {};
+    std::vector<std::vector<int>> pairs = {};
+    std::string config;
 
     std::string join(const std::vector<std::string>& vec) {
         std::string result;
@@ -24,11 +26,11 @@ private:
     }
 
 public:
-    Commutator(std::vector<std::string> pairs): pairs(pairs) {}
+    Commutator(std::vector<std::string> pairs): pairs(Ring::transform(pairs)), config(join(pairs)) {}
 
-    char transform(char input) {
-        char output = input;
-        for (std::string config: pairs) {
+    int transform(int input) {
+        int output = input;
+        for (std::vector<int> config : pairs) {
             if (config[0] == input) {
                 output = config[1];
             } else if (config[1] == input) {
@@ -36,7 +38,6 @@ public:
             }
         }
 
-        Log::log("Commutator", join(pairs), input, output, true);
         return output;
     }
 };

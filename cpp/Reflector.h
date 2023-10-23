@@ -8,16 +8,23 @@
 #ifndef CPP_REFLECTOR_H
 #define CPP_REFLECTOR_H
 
-class Reflector {
+#include "Ring.h"
+#include "abstract/IReflector.h"
+
+class Reflector : public IReflector {
     std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     std::string reflector = "";
-    std::string type = "";
+
+    std::vector<int> config;
 
 public:
-    Reflector(const std::string& config, const std::string& type) : reflector(config), type(type) {}
+    std::string type = "";
+
+    Reflector(const std::string& config, const std::string& type) : config(Ring::transform(config)), type(type) {}
 
     Reflector static factory(std::string type) {
         if (type == "UKW-A") {
+            //                ABCDEFGHIJKLMNOPQRSTUVWXYZ
             return Reflector("EJMZALYXVBWFCRQUONTSPIKHGD", type);
         } else if (type == "UKW-B") {
             return Reflector("YRUHQSLDPXNGOKMIEBFZCWVJAT", type);
@@ -28,27 +35,8 @@ public:
         throw std::invalid_argument("Unknown reflector type");
     }
 
-    char reflect(char input, bool isEncryption) {
-        if (isEncryption) {
-            Log::log("Reflector", type, input, reflect(input), true);
-            return reflect(input);
-        } else {
-            Log::log("Reflector", type, input, reflectBack(input), true);
-            return reflectBack(input);
-        }
-    }
-
-private:
-    int findIndex (std::string& _alphabet, char input) {
-        return std::distance(_alphabet.begin(), std::find(_alphabet.begin(), _alphabet.end(), input));
-    }
-
-    char reflect(char input) {
-        return reflector[findIndex(alphabet, input)];
-    }
-
-    char reflectBack(char input) {
-        return alphabet[findIndex(reflector, input)];
+    int reflect(int input) const override {
+        return config[input];
     }
 };
 

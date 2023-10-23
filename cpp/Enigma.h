@@ -2,8 +2,8 @@
 // Created by Dmitrii Tarasov on 11/10/2023.
 //
 #include <iostream>
-#include "Rotor.h"
-#include "Reflector.h"
+#include "abstract/IRotor.h"
+#include "abstract/IReflector.h"
 #include "Commutator.h"
 
 #ifndef CPP_ENIGMA_H
@@ -11,57 +11,74 @@
 
 
 class Enigma {
+
 private:
-    Reflector reflector;
+    std::unique_ptr<IReflector> reflector;
     Commutator commutator;
-    std::vector<Rotor> rotors;
+    std::vector<std::unique_ptr<IRotor>> rotors;
 
 public:
     Enigma(
-        std::vector<Rotor> rotors,
-        Reflector reflector,
+        std::vector<std::unique_ptr<IRotor>> _rotors,
+        std::unique_ptr<IReflector> _reflector,
         Commutator commutator
-    ): rotors(rotors), reflector(reflector), commutator(commutator) {}
+    ): rotors(std::move(_rotors)), reflector(std::move(_reflector)), commutator(commutator) {}
 
-    char encrypt(char input) {
-        char encrypted = transform(input, true);
+    int encrypt(int input) {
+        int encrypted = transform(input, true);
         rotateRotors();
         return encrypted;
     }
 
+    std::string encryptMessage(std::string& inputLine) {
+        std::vector<int> indexes = Ring::transform(inputLine);
+        std::vector<int> result;
+
+        for (int index : indexes) {
+            int value = encrypt(index);
+            result.push_back(value);
+        }
+
+        std::string encryptedMessage = Ring::transform(result);
+
+        return encryptedMessage;
+    }
+
     void reset() {
-        for (Rotor& rotor : rotors) {
-            rotor.reset();
+        for (auto& rotorPtr : rotors) {
+            rotorPtr->reset();
         }
     }
 
 private:
-    char transform(char input, bool isEncryption) {
-        input = commutator.transform(input);
+    int transform(int input, bool isEncryption) {
+        int result = input;
+
+        result = commutator.transform(result);
 
         // Прямое преобразование через все роторы
-        for (Rotor& rotor : rotors) {
-            input = rotor.transform(input);
+        for (std::unique_ptr<IRotor>& rotor : rotors) {
+            result = rotor -> transform(result);
         }
 
         // Отражение от рефлектора
-        input = reflector.reflect(input, isEncryption);
+        result = reflector -> reflect(result);
 
         // Обратное преобразование через все роторы в обратном порядке
-        for (auto it = rotors.rbegin(); it != rotors.rend(); ++it) {
-            input = it->reverseTransform(input);
+        for (int i = rotors.size() - 1; i >= 0; i--) {
+            result = rotors[i] -> reverseTransform(result);
         }
 
-        input = commutator.transform(input);
+        result = commutator.transform(result);
 
-        return input;
+        return result;
     }
 
     void rotateRotors() {
-        rotors[0].rotate();
+        rotors[0] -> rotate();
         for (size_t i = 0; i < rotors.size() - 1; ++i) {
-            if (rotors[i].madeFullRotation()) {
-                rotors[i + 1].rotate();
+            if (rotors[i] -> madeFullRotation()) {
+                rotors[i + 1] -> rotate();
             }
         }
     }
