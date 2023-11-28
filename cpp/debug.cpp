@@ -2,16 +2,16 @@
 #include <string>
 #include <algorithm>
 
-#include "Enigma.h"
-#include "Commutator.h"
-#include "Ring.h"
-#include "log/ReflectorWithLog.h"
-#include "log/RotorWithLog.h"
+#include "src/Enigma.h"
+#include "src/Commutator.h"
+#include "src/Ring.h"
+#include "src/log/ReflectorWithLog.h"
+#include "src/log/RotorWithLog.h"
 
 int main() {
-    std::unique_ptr<IRotor> rotor3 = std::make_unique<RotorWithLog>(RotorWithLog("III", 12, 22));
-    std::unique_ptr<IRotor> rotor2 = std::make_unique<RotorWithLog>(RotorWithLog("I", 2, 13));
     std::unique_ptr<IRotor> rotor1 = std::make_unique<RotorWithLog>(RotorWithLog("II", 1, 24));
+    std::unique_ptr<IRotor> rotor2 = std::make_unique<RotorWithLog>(RotorWithLog("I", 2, 13));
+    std::unique_ptr<IRotor> rotor3 = std::make_unique<RotorWithLog>(RotorWithLog("III", 12, 22));
 
     std::vector<std::unique_ptr<IRotor>> rotors;
     rotors.push_back(std::move(rotor3));

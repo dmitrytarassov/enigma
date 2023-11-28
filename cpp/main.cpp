@@ -6,10 +6,10 @@
 #include <string>
 #include <algorithm>
 
-#include "Enigma.h"
-#include "Commutator.h"
-#include "Reflector.h"
-#include "Rotor.h"
+#include "src/Enigma.h"
+#include "src/Commutator.h"
+#include "src/Reflector.h"
+#include "src/Rotor.h"
 #include <fstream>
 #include <chrono>
 
@@ -31,11 +31,11 @@ int main() {
            })
     );
 
-    std::ifstream file("../lorem.txt");
+    std::ifstream file("../../test.txt");
 
-    if (!file) {  // Check if the file was opened successfully
+    if (!file) {
         std::cerr << "Unable to open the file." << std::endl;
-        return 1;  // Return with an error code
+        return 1;
     }
 
     std::string inputLine, decryptedMessage;
@@ -51,7 +51,7 @@ int main() {
 
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 
-    std::cout << duration.count() << std::endl;
+    std::cout << "Done! Time: " << duration.count() << " ms." << std::endl;
 
     return 0;
 }
