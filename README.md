@@ -26,3 +26,6 @@ For debugging the C++ implementation, use `make debug-cpp`.
 
 ## License
 [License information]
+
+## Useful links
+[Enigma Cipher by dencode](https://dencode.com/en/cipher/enigma)
