@@ -39,7 +39,8 @@ public:
         type(type),
         ringRotation(_ringRotation - 1)
     {
-        turnover = _config.find(turnoverLetter) + 1;
+        std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        turnover = alphabet.find(turnoverLetter) + 1;
         if (turnover > _config.size()) {
             turnover = 0;
         }
